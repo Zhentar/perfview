@@ -1216,6 +1216,13 @@ namespace Microsoft.Diagnostics.Tracing.Session
             }
         }
 
+        /// <summary>
+        /// The output file can use a compressed form or not.  Compressed forms can only be read on Win8 and beyond.   Defaults to false.
+        /// Must be set before any providers are enabled. 
+        /// Note that compressed trace files may not be able to be merged with uncompressed trace files.
+        /// </summary>
+        public bool OutputUsesCompressedFormat { get; set; }
+
         // These properties are read-only 
         /// <summary>
         /// The name of the session that can be used by other threads to attach to the session. 
@@ -2170,6 +2177,11 @@ namespace Microsoft.Diagnostics.Tracing.Session
                 else
                 {
                     properties->LogFileMode |= TraceEventNativeMethods.EVENT_TRACE_FILE_MODE_SEQUENTIAL;
+                }
+
+                if(OutputUsesCompressedFormat)
+                {
+                    properties->LogFileMode |= TraceEventNativeMethods.EVENT_TRACE_COMPRESSED_MODE;
                 }
 
                 if (m_FileName.Length > MaxNameSize - 1)
